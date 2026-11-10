@@ -26,7 +26,7 @@ body {
 h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
-input, button {
+input, button#generateBtn {
     width: 100%;
     border: none;
     outline: none;
@@ -37,7 +37,7 @@ input, button {
     box-sizing: border-box;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-button {
+button#generateBtn {
     padding: 15px;
 }
 input[type="file"] {
@@ -49,7 +49,7 @@ input[type="file"] {
     display: block;
     border-radius: 5px;
 }
-button {
+button#generateBtn {
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -57,10 +57,10 @@ button {
     box-shadow: 0 1px 4px #000000, 0 1px 4px rgba(0, 0, 0, 0.5);
     background: linear-gradient(to bottom, midnightblue, #000047);
 }
-button:hover {
+button#generateBtn:hover {
     background: midnightblue;
 }
-button:disabled {
+button#generateBtn:disabled {
     cursor: not-allowed;
 }
 .password-field {
