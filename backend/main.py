@@ -178,6 +178,7 @@ async def download(filename: str):
 async def health():
     return {"status": "healthy"}
 
+from fastapi.staticfiles import StaticFiles
 
-# serverside py -m uvicorn main:app --reload
-# clientside py -m http.server 5500 
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
