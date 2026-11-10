@@ -63,3 +63,45 @@ button:hover {
 button:disabled {
     cursor: not-allowed;
 }
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 44px; /* room for the icon */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  color: #111827;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Swap icons */
+.password-toggle .icon-eye-off { display: none; }
+.password-toggle.is-visible .icon-eye { display: none; }
+.password-toggle.is-visible .icon-eye-off { display: block; }
+
+/* Edge adds its own reveal icon; hide it so there aren't two */
+.password-field input::-ms-reveal { display: none; }

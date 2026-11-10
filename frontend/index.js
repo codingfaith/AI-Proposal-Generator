@@ -22,7 +22,21 @@ function clearSavedPassword() {
 
 document.addEventListener("DOMContentLoaded", () => {
     const passwordInput = document.getElementById("accessPassword");
+    const toggleBtn = document.getElementById("togglePassword");
+
     if (passwordInput) passwordInput.value = loadSavedPassword();
+
+    // Eye icon: show / hide the password
+    if (passwordInput && toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            const show = passwordInput.type === "password";
+            passwordInput.type = show ? "text" : "password";
+            toggleBtn.classList.toggle("is-visible", show);
+            toggleBtn.setAttribute("aria-pressed", String(show));
+            toggleBtn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+            passwordInput.focus();
+        });
+    }
 });
 
 // ==================== MAIN ====================
