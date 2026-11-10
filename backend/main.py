@@ -1,29 +1,38 @@
-
+import os
+import secrets
+import time
 import uuid
+from collections import defaultdict, deque
 from pathlib import Path
 from urllib.parse import quote
  
+from dotenv import load_dotenv
+ 
+load_dotenv()  # reads .env locally; does nothing on the host, where real env vars are set
+ 
 import pymupdf  # PyMuPDF
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
  
 from generator import generate_proposal_json
 from ppt_builder import OUTPUT_DIR, build_ppt  # share one output folder
  
 app = FastAPI(title="Proposal Generator API")
  
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS is only needed if the frontend is served from a different origin.
+# When FastAPI serves the frontend itself (the default setup), leave CORS_ORIGINS unset.
+cors_origins = [o.strip() for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()]
+if cors_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
  
 # ==================== CONFIG ====================
  
@@ -35,6 +44,51 @@ MAX_RFQ_CHARS = 60_000  # truncate very long RFQs before sending to the model
 PPTX_MEDIA_TYPE = (
     "application/vnd.openxmlformats-officedocument.presentationml.presentation"
 )
+ 
+APP_PASSWORD = os.environ.get("APP_PASSWORD", "")
+MAX_FAILED_ATTEMPTS = 5          # wrong passwords allowed...
+LOCKOUT_SECONDS = 15 * 60        # ...per IP within this window
+ 
+if not APP_PASSWORD:
+    print("WARNING: APP_PASSWORD is not set. Protected endpoints will refuse all requests.")
+ 
+ 
+# ==================== PASSWORD PROTECTION ====================
+ 
+_failed_attempts = defaultdict(deque)  # ip -> timestamps of recent wrong passwords
+ 
+ 
+def _client_ip(request: Request) -> str:
+    # Behind Render's proxy the real client is the LAST entry the proxy appended
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[-1].strip()
+    return request.client.host if request.client else "unknown"
+ 
+ 
+def require_password(request: Request, x_access_password: str = Header(default="")):
+    """Dependency: rejects the request unless it carries the correct password header."""
+    if not APP_PASSWORD:
+        # Fail closed: never leave the app open because of a missing setting
+        raise HTTPException(status_code=503, detail="Server is not configured (APP_PASSWORD is not set)")
+ 
+    ip = _client_ip(request)
+    now = time.monotonic()
+    attempts = _failed_attempts[ip]
+    while attempts and now - attempts[0] > LOCKOUT_SECONDS:
+        attempts.popleft()
+ 
+    if len(attempts) >= MAX_FAILED_ATTEMPTS:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many incorrect attempts. Please try again in 15 minutes.",
+        )
+ 
+    if not secrets.compare_digest(x_access_password.encode(), APP_PASSWORD.encode()):
+        attempts.append(now)
+        raise HTTPException(status_code=401, detail="Incorrect password")
+ 
+    attempts.clear()
  
  
 # ==================== HELPERS ====================
@@ -77,7 +131,7 @@ def make_safe_name(name: str) -> str:
  
 # ==================== ROUTES ====================
  
-@app.post("/generate")
+@app.post("/generate", dependencies=[Depends(require_password)])
 async def generate(
     file: UploadFile = File(...),
     client_name: str = Form("Client"),
@@ -153,7 +207,7 @@ async def generate(
         rfq_path.unlink(missing_ok=True)
  
  
-@app.get("/download/{filename}")
+@app.get("/download/{filename}", dependencies=[Depends(require_password)])
 async def download(filename: str):
     ppt_path = (OUTPUT_DIR / filename).resolve()
  
@@ -171,14 +225,19 @@ async def download(filename: str):
         filename=ppt_path.name,
         media_type=PPTX_MEDIA_TYPE,
     )
-    
  
  
 @app.get("/health")
 async def health():
+    # Left public so the host's health checks work; reveals nothing sensitive
     return {"status": "healthy"}
-
-from fastapi.staticfiles import StaticFiles
-
+ 
+ 
+# ==================== FRONTEND ====================
+ 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
-app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+if FRONTEND_DIR.is_dir():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+else:
+    print(f"WARNING: frontend folder not found at {FRONTEND_DIR}; only the API is available.")
+ 
