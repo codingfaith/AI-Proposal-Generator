@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Proposal Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div class="container">
+    <img src="images/Plus94_logo2.png" alt="Plus94 Logo" id="logo" />
+    <h1>AI Proposal Generator</h1>
+
+    <input type="text" id="client" placeholder="Enter Client Name..." value="">
+    <input type="file" id="rfqFile" accept=".txt,.pdf,.docx">
+    <p id="instruction">Please upload a PDF RFQ file with at most 5 pages, best to exclude information that is irrelevant to proposal generation.</p>
+    <button id="generateBtn" onclick="generateProposal()">Generate Proposal</button>
+
+    <div id="status"></div>
+    <!-- Progress Bar -->
+    <div id="progressContainer" style="display: none; margin: 15px 0;">
+        <div style="background-color: #f0f0f0; height: 8px; border-radius: 4px; overflow: hidden;">
+            <div id="progressBar" 
+                style="width: 0%; height: 100%; background: linear-gradient(90deg, #3498db, #2ecc71); 
+                        transition: width 0.3s ease-in-out;">
+            </div>
+        </div>
+    </div>
+    <a id="downloadLink" href="#" style="display: none; margin-top: 15px; font-size: 18px;">
+        Download PPTX
+    </a>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>

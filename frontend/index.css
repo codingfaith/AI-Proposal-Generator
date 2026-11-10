@@ -1,0 +1,65 @@
+body {
+    background: #f4f4f4;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+#instruction {
+    color: orange;
+    font-size: 12px;
+    text-align: left;
+    font-style: italic; 
+}
+.container {
+    width: 500px;
+    color: white;
+    padding: 50px;
+    text-align: center;
+    margin: 100px auto;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-image: url("images/signin-background.png");
+    background-color: linear-gradient(to bottom right, #ffffff, midnightblue);
+}
+h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+input, button {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-family: inherit;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+button {
+    padding: 15px;
+}
+input[type="file"] {
+    padding: 10px;
+    font-family: inherit;
+}
+#logo {
+    width: 100px;
+    display: block;
+    border-radius: 5px;
+}
+button {
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 1px 4px #000000, 0 1px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to bottom, midnightblue, #000047);
+}
+button:hover {
+    background: midnightblue;
+}
+button:disabled {
+    cursor: not-allowed;
+}
