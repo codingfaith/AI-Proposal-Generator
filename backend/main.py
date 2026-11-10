@@ -137,7 +137,7 @@ async def generate(
  
         return {
             "message": "Proposal generated successfully",
-            "download_url": f"http://localhost:8000/download/{quote(ppt_filename)}",
+            "download_url": f"/download/{quote(ppt_filename)}",
             "filename": ppt_filename,
             "client_name": client_name,
         }

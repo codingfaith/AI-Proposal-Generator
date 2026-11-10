@@ -1,7 +1,7 @@
 // ==================== CONFIG ====================
 // These values match the backend in main.py
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "";
 const ALLOWED_EXTENSIONS = [".pdf"];
 const MAX_FILE_SIZE_MB = 20;
 const REQUEST_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
@@ -60,7 +60,7 @@ async function generateProposal() {
             if (err.name === "AbortError") {
                 throw new Error("The request timed out. Please try again.");
             }
-            throw new Error("Can't reach the server. Is the backend running on port 8000?");
+            throw new Error("Can't reach the server. Please try again in a moment.");
         }
 
         if (!response.ok) {
