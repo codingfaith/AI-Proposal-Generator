@@ -52,9 +52,6 @@ p#instruction {
     transform: scaleX(-1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);  
 }
-#status {
-    color: aqua
-}
 .container {
     padding: 50px;
     display: flex;
