@@ -8,46 +8,57 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+<div class="flex-container">
+    <div class="aesthetics">
+        <h1>AI <span>Proposal</span> Generator</h1>
+        <img src="images/aesthetics.png" alt="aesthetics" id="aesthetics" /> 
+    </div> 
+    <div class="container">
+        <div class="heading">
+            <img src="images/AI.jpg" alt="AI image" id="ai-image" />
+            <span>The science of decision making</span>
+        </div>
+        <input type="text" id="client" placeholder="Enter Client Name..." value="">
+        <input type="file" id="rfqFile" accept=".txt,.pdf,.docx">
+        <div class="password-field">
+            <input type="password" id="accessPassword" placeholder="Access password" autocomplete="current-password" />
+            <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password" aria-pressed="false">
+            <!-- eye (shown when the password is hidden) -->
+            <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <!-- eye with a slash (shown when the password is visible) -->
+            <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+        </button>
+    </div>
+        <p id="instruction">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#FFFFFF"><path d="M11,17h2V11H11v6Zm1.71-8.29Q13,8.42 13,8q0-0.43-0.29-0.71T12,7T11.29,7.29T11,8q0,0.42 0.29,0.71T12,9t0.71-0.29ZM12,22q-2.07,0-3.9-0.79q-1.82-0.79-3.17-2.14Q3.58,17.73 2.79,15.9T2,12Q2,9.92 2.79,8.1Q3.58,6.27 4.93,4.93Q6.28,3.57 8.1,2.79Q9.93,2 12,2t3.9,0.79t3.17,2.14q1.35,1.35 2.14,3.17Q22,9.92 22,12t-0.79,3.9t-2.14,3.17q-1.35,1.35-3.17,2.14T12,22Zm0-2q3.35,0 5.68-2.32T20,12T17.68,6.32T12,4T6.33,6.32T4,12t2.33,5.68T12,20Zm0-8Z"/></svg>
+            <span>Please upload a PDF RFQ file with at most 5 pages, best to exclude information that is irrelevant to proposal generation.</span>
+        </p>
+        <button id="generateBtn" onclick="generateProposal()">Generate Proposal
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="#FFFFFF"><path d="M12.6,12L8,7.4L9.4,6l6,6l-6,6L8,16.6L12.6,12Z"/></svg>
+        </button>
 
-<div class="container">
-    <img src="images/Plus94_logo2.png" alt="Plus94 Logo" id="logo" />
-    <h1>AI Proposal Generator</h1>
-
-    <input type="text" id="client" placeholder="Enter Client Name..." value="">
-    <input type="file" id="rfqFile" accept=".txt,.pdf,.docx">
-    <div class="password-field">
-   <input type="password" id="accessPassword" placeholder="Access password" autocomplete="current-password" />
-   <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password" aria-pressed="false">
-    <!-- eye (shown when the password is hidden) -->
-    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-      <circle cx="12" cy="12" r="3"/>
-    </svg>
-    <!-- eye with a slash (shown when the password is visible) -->
-    <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-      <line x1="1" y1="1" x2="23" y2="23"/>
-    </svg>
-   </button>
-  </div>
-    <p id="instruction">Please upload a PDF RFQ file with at most 5 pages, best to exclude information that is irrelevant to proposal generation.</p>
-    <button id="generateBtn" onclick="generateProposal()">Generate Proposal</button>
-
-    <div id="status"></div>
-    <!-- Progress Bar -->
-    <div id="progressContainer" style="display: none; margin: 15px 0;">
-        <div style="background-color: #f0f0f0; height: 8px; border-radius: 4px; overflow: hidden;">
-            <div id="progressBar" 
-                style="width: 0%; height: 100%; background: linear-gradient(90deg, #3498db, #2ecc71); 
-                        transition: width 0.3s ease-in-out;">
+        <div id="status"></div>
+        <!-- Progress Bar -->
+        <div id="progressContainer" style="display: none; margin: 15px 0;">
+            <div style="background-color: #f0f0f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                <div id="progressBar" 
+                    style="width: 0%; height: 100%; background: linear-gradient(90deg, #3498db, #2ecc71); 
+                            transition: width 0.3s ease-in-out;">
+                </div>
             </div>
         </div>
+        <a id="downloadLink" href="#" style="display: none; margin-top: 15px; font-size: 18px;">
+            Download PPTX
+        </a>
     </div>
-    <a id="downloadLink" href="#" style="display: none; margin-top: 15px; font-size: 18px;">
-        Download PPTX
-    </a>
+    <div class="empty"></div>
 </div>
-
 <script src="index.js"></script>
 </body>
 </html>
