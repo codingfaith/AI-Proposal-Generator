@@ -43,7 +43,7 @@ def generate_proposal_json(rfq_text: str, client_name: str = "Client") -> Dict[s
         Where information is missing, make reasonable proposal assumptions and clearly state them.
         Return valid JSON only.
         Do not include markdown, explanations, or text outside the JSON.
-"""
+    """
 
     user_prompt = f"""
 Client name: {client_name}
@@ -78,7 +78,6 @@ Content guidance:
 - Quality controls: include sampling checks, questionnaire review, fieldwork monitoring, validation, and data cleaning.
 - Timeline: provide a practical week-by-week plan.
 - Deliverables: provide clear project deliverables as bullet points.
-- Costing assumptions: explain what pricing would depend on and recommend a pricing strategy.
 - Recommended approach: explain why this approach is suitable.
 - Risks: list possible project risks.
 - Assumptions: list key assumptions used in preparing the draft.
