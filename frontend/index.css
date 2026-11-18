@@ -55,14 +55,17 @@ p#instruction {
 .container {
     padding: 50px;
     display: flex;
-    width: 650px;
     height: 700px;
+    max-width: 650px;
     color: #001b50;
     text-align: center;
     border-radius: 10px;
-     flex-direction: column;
+    flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+#status {
+    background: #ffffff;
 }
 .heading {
     display: flex;
@@ -161,8 +164,14 @@ button#generateBtn:disabled {
 /* Edge adds its own reveal icon; hide it so there aren't two */
 .password-field input::-ms-reveal { display: none; }
 
-@media screen and (max-width:800px) {
-  #aesthetics, .empty {
+@media (max-width:1170px) {
+  body {
+    background-image: url("images/small-bg.png");
+  }    
+  .aesthetics, .empty,  #aesthetics {
     display: none;
-}
+  }
+  .container { 
+    margin: auto;
+  }
 }
